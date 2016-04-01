@@ -53,7 +53,11 @@ LINUX = Yes
 ifeq ($(TARGET_SYS),)
 FB  = Yes
 X11 = Yes
+ifeq ($(MACHINE), arm71)
+NEON=Yes
+else
 CFLAGS += -DHAVE_MTTR
+endif
 else
 FB  = Yes
 CC = $(TARGET_SYS)-gcc
