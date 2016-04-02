@@ -53,10 +53,8 @@ LINUX = Yes
 ifeq ($(TARGET_SYS),)
 FB  = Yes
 X11 = Yes
-ifeq ($(MACHINE), arm71)
-NEON=Yes
-else
-CFLAGS += -DHAVE_MTTR
+ifneq ($(MACHINE), armv7l)
+CFLAGS += -DHAVE_MTRR
 endif
 else
 FB  = Yes
@@ -66,6 +64,7 @@ endif
 LD_SHARED	:= $(CC) -shared
 DLL_LIBS=
 endif
+
 
 ifeq ($(OSNAME), Darwin)
 MAC_OS_X = Yes
@@ -84,7 +83,6 @@ endif
 
 
 ifeq ($(TARGET_SYS),)
-
 ifeq ($(MACHINE), "Power Macintosh")
 ALTIVEC   = Yes
 endif
@@ -109,6 +107,14 @@ MMX       = Yes
 SSE       = No
 SSE2      = Yes
 SSE3      = No
+endif
+
+ifeq ($(MACHINE), armv7l)
+MMX       = No 
+SSE       = No
+SSE2      = No
+SSE3      = No
+NEON      = Yes
 endif
 
 endif
@@ -214,6 +220,12 @@ ifeq ($(MMX),Yes)
 	DFLAGS += -DUSE_MMX
 	ARCH_FLAGS += -mmmx
 	SIMD_OBJS += epx_simd_mmx.o
+endif
+
+ifeq ($(NEON),Yes)
+	DFLAGS += -D__NEON__
+	ARCH_FLAGS += -mfpu=neon-vfpv4 -mfloat-abi=hard -flax-vector-conversions
+	SIMD_OBJS += epx_simd_neon.o
 endif
 
 LIB_OBJS = \

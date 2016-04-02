@@ -2,11 +2,11 @@
 #
 #
 release:
-	(cd c_src; $(MAKE) release)
+	(cd c_src; $(MAKE) -j4 release)
 	(cd tools; $(MAKE))
 
 debug:
-	(cd c_src; $(MAKE) debug)
+	(cd c_src; $(MAKE) -j4 debug)
 	(cd tools; $(MAKE))
 
 clean:
